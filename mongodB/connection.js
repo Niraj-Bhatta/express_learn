@@ -4,6 +4,8 @@ const mongodb = require('mongodb'); // MongoDB module
 
 const app = express();
 
+app.use(express.json()); // Middleware to parse JSON request body
+
 // Create MongoDB client
 const client = new mongodb.MongoClient("mongodb://localhost:27017");
 
@@ -22,16 +24,20 @@ client.connect()
         // POST route to insert student
         app.post("/student", (req, res, next) => {
 
-            student.insertOne({
-                name: "John Doe",
-                age: 20,
-                email: "john@email.com"
-            })
+            // student.insertOne({
+            //     name: name,
+            //     age: age,
+            //     email: email,
+            //     department: department
+            // })
+
+            student.insertMany(req.body)
+
             .then(() => {
                 res.status(201).send("Student created successfully");
             })
             .catch((err) => {
-                next(err);
+                 res.status(500).send(err.message);
             });
 
         });
